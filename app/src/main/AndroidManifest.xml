@@ -24,6 +24,10 @@
             android:name=".Swipies"
             android:label="@string/title_activity_swipies" >
         </activity>
+        <activity
+            android:name=".CurrentLocation"
+            android:label="@string/title_activity_current_location" >
+        </activity>
     </application>
 
 </manifest>

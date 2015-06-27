@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class Location extends ActionBarActivity {
 
@@ -19,34 +20,27 @@ public class Location extends ActionBarActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == LOCATION_SETTINGS_REQUEST) {
-            // user is back from location settings - check if location services are now enabled
-            LocationManager locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-            boolean location_on = false;
+            // user press back button from location settings
+            // check if location services are now enabled
 
-            try {
-                location_on = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            } catch (Exception e) {}
+            boolean location_on = checkLocationStatus();
 
             if (location_on) {
                 startActivity(new Intent(Location.this, Swipies.class));
                 finish();
             }
         }
-
     }
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LocationManager locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-        boolean location_on = false;
-
-        try {
-            location_on = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        } catch (Exception e) {}
+        boolean location_on = checkLocationStatus();
 
         if (!location_on) {
+
+            // yes button
             Button yesButton;
             setContentView(R.layout.activity_location);
 
@@ -59,17 +53,29 @@ public class Location extends ActionBarActivity {
                 }
             });
 
-        } else {
+            // no button
+            Button noButton;
+            noButton = (Button)findViewById(R.id.no_button);
 
+            noButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(Location.this, CurrentLocation.class));
+                }
+            });
+
+        } else {
             startActivity(new Intent(Location.this, Swipies.class));
             finish();
         }
-
-
-
     }
 
-    public void checkLocationStatus() {
+    /**
+     * Check if location if on or off
+     *
+     * @return TRUE if location is on, FALSE if location is off
+     */
+    public boolean checkLocationStatus() {
         LocationManager locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
         boolean location_on = false;
 
@@ -77,40 +83,6 @@ public class Location extends ActionBarActivity {
             location_on = locMan.isProviderEnabled(LocationManager.GPS_PROVIDER);
         } catch (Exception e) {}
 
-        if (!location_on) {
-            Button yesButton;
-            setContentView(R.layout.activity_location);
-
-            yesButton = (Button)findViewById(R.id.yes_button);
-
-            yesButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }
-            });
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_location, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return location_on;
     }
 }

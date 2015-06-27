@@ -10,5 +10,8 @@
     <string name="yes_button_msg">Yes</string>
     <string name="no_button_msg">No</string>
     <string name="title_activity_swipies">Swipies</string>
+    <string name="title_activity_current_location">CurrentLocation</string>
+    <string name="ask_current_location_msg">Where are you now?</string>
+    <string name="next_button_msg">Next</string>
 
 </resources>
